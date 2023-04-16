@@ -2,7 +2,7 @@ const express = require('express'); //importando o express
 
 const server = express(); //criando uma varivel que chama a função express
 server.use(express.json());
-const tarefas = [];
+const tarefas = []; //array de tarefas
 
 server.get('/tarefas', (req, res) => { //req seria a requisição e res seria a resposta para o front
     return res.json(tarefas); // retornando todas as tarefas existentes
