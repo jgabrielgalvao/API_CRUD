@@ -2,34 +2,50 @@ const express = require('express'); //importando o express
 
 const server = express(); //criando uma varivel que chama a função express
 server.use(express.json());
-const tarefas = []; //array de tarefas
+
+const tarefas = [{'id': 1, 'tarefa': 'limpar a casa', 'situacao': 'concluida'}]; //array de tarefas
 
 server.get('/tarefas', (req, res) => { //req seria a requisição e res seria a resposta para o front
     return res.json(tarefas); // retornando todas as tarefas existentes
 });//primeira rota
 
-server.get('/tarefas/:index', (req, res) => {
-    return res.json(req.user);
+server.get('/tarefas/:id', (req, res) => {
+    const tarefa = tarefas.find(item => item.id == req.params.id);
+    if (tarefa) {
+      res.json({...tarefa});
+    } else {
+      res.status(404).json({ message: 'Tarefa não encontrada' });
+    }
 });
 
 server.post('/tarefas', (req, res) => {
-    const { nome } = req.body; // faz a busca do nome informado na requisição
-    tarefas.push(nome); //adiciona o nome informado no banco
-    return res.json(tarefas);
+    const { tarefa, situacao } = req.body;
+    tarefas.push({
+      id: tarefas.length + 1,
+      tarefa: tarefa,
+      situacao: situacao
+    });
+    res.json(tarefas);
 });
 
-server.put('/tarefas/:index', (req, res) => {
-    const { index } = req.params; //recupera o index com os dados
-    const { nome } = req.body;
-
-    tarefas[index] = nome;
-
-    return res.json(tarefas);
+server.put('/tarefas/:id', (req, res) => {
+    const tarefaIndex = tarefas.findIndex(item => item.id == req.params.id);
+    if (tarefaIndex !== -1) {
+      tarefas[tarefaIndex] = { ...tarefas[tarefaIndex], ...req.body };
+      res.json(tarefas[tarefaIndex]);
+    } else {
+      res.status(404).json({ message: 'tarefa não encontrada' });
+    }
 });
 
-server.delete('/tarefas/:index', (req, res) => {
-    const { index } = req.params;
-    tarefas.splice(index, 1); //percorre todo o vetor com os dados e exclui uma posição
+server.delete('/tarefas/:id', (req, res) => {
+    const tarefaIndex = tarefas.findIndex(item => item.id == req.params.id);
+    if (tarefaIndex !== -1) {
+        tarefas.splice(tarefaIndex, 1);
+        res.sendStatus(204);
+      } else {
+        res.status(404).json({ message: 'Tarefa não encontrada' });
+      } //percorre todo o vetor com os dados e exclui uma posição
 });
 
 server.listen(3000); //executando o meu servidor na porta 3000 do localhost
