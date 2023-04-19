@@ -12,5 +12,6 @@
   "devDependencies": {
     "nodemon": "^2.0.22"
   },
-  "repository": "https://github.com/jgabrielgalvao/API_CRUD.git"
+  "repository": "https://github.com/jgabrielgalvao/API_CRUD.git",
+  "author": "jgabrielgalvao josegabriel755@gmail.com"
 }
